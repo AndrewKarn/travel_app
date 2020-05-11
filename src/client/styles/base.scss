@@ -1,0 +1,72 @@
+.debug {
+  color: hsla(210, 100%, 100%, 0.9) !important;
+  background: hsla(210, 100%, 50%, 0.5) !important;
+  outline: solid 0.25rem hsla(210, 100%, 100%, 0.5) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  //min-height: 100vh;
+}
+
+main {
+  flex: 2;
+}
+
+section {
+  margin: 50px auto;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.travel_pic {
+  width: 100%;
+  height: auto;
+}
+
+.right-side-container {
+  display: flex;
+  align-items: center;
+  width: 40%;
+  padding: 6em;
+}
+
+.left-side-container {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  padding: 5em;
+  align-items: center;
+}
+
+.bordered {
+  border: outset gray;
+}
+
+.centered {
+  justify-content: center;
+}
+
+
+@media only screen and (max-width: 700px) {
+  .left-side-container {
+    display: none;
+  }
+  .right-side-container {
+    display: flex;
+    width: 20%;
+    flex-direction: row;
+    padding: 6em;
+  }
+}

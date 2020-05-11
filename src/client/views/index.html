@@ -1,0 +1,54 @@
+<!DOChandleSubmitTYPE html>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Test</title>
+</head>
+<body class="">
+
+<header class="header">
+    <div class="header logo">
+        Travel Planner!
+    </div>
+</header>
+
+<main class="centered">
+    <section class="flex-row bordered">
+        <div class="right-side-container">
+            <div class="flex-col centered">
+                <p id="my-trip-to">My trip to:</p>
+                <p id="departing">Departing:</p>
+                <p id="days-until">Days until trip: </p>
+                <p>Typical Weather for then is:</p>
+                <p id="weather_for_trip"></p>
+                <form class="centered">
+                    <p>Where are we going?</p>
+                    <input id="city" placeholder="Enter Location" required type="text">
+                    <label for="date"></label><input id="date" placeholder="Enter Date" required type="date">
+                    <input class="btn" name="" onclick="return Client.handleSubmit(event)"
+                           onsubmit="return Client.handleSubmit(event)" type="submit"
+                           value="Save Trip">
+                </form>
+            </div>
+        </div>
+        <div class="left-side-container">
+            <img class="travel_pic" id="travel_picture" src="/./src/client/images/test.jpg">
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>Developed by Drew Karn</p>
+</footer>
+<script>
+    // Check that service workers are supported
+    if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
+</script>
+</body>
+
+</html>
