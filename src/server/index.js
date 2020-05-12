@@ -25,12 +25,12 @@ app.post('/image', (req, res) => {
         return `https://pixabay.com/api/${pixabayKey}&q=${city}+${country}&image_type=photo`
     }
 
-    let [country, city] = (req.body.location.split(",") ?? ['Paris, France'])
+    let [country, city] = (req.body.location.split(",") || ['Paris, France'])
     console.log(constructPixabayURL(city, country));
     request.get(constructPixabayURL(city, country), {json: true}, (err, response, body) => {
         try {
             if (!err) {
-                res.send(JSON.stringify(body.hits[0].largeImageURL ?? {'result': 'no images found'}));
+                res.send(JSON.stringify(body.hits[0].largeImageURL || {'result': 'no images found'}));
             }
         } catch (e) {
             console.log(e)
@@ -45,8 +45,8 @@ app.post('/weather', (req, res) => {
     let [lonData, latData, date1, date2] = req.body.location.split(",");
     const start_date = `&start_date=${date1}`;
     const end_date = `&end_date=${date2}`;
-    const lon = `&lon=${lonData}` ?? '&lon=38.123';
-    const lat = `lat=${latData}` ?? '&lat=78.543';
+    const lon = `&lon=${lonData}` || '&lon=38.123';
+    const lat = `lat=${latData}` || '&lat=78.543';
     const urlString = `${weatherURL}${lat}${lon}${start_date}${end_date}&units=I${weatherKey}`
     request(urlString, {json: true}, (err, response, body) => {
         try {
@@ -59,11 +59,11 @@ app.post('/weather', (req, res) => {
 
 
 app.post('/geodata', (req, res) => {
-    let [city, country] = req.body.location.split(",") ?? [];
+    let [city, country] = req.body.location.split(",") || [];
     const geo = new geode(process.env.geoName, {language: 'en', country: country});
     try {
         geo.search({name: city, placename: country}, function (err, results) {
-            res.send(JSON.stringify({'data': [results.geonames[0].lat, results.geonames[0].lng] ?? {'result': 'None found'}}));
+            res.send(JSON.stringify({'data': [results.geonames[0].lat, results.geonames[0].lng] || {'result': 'None found'}}));
         });
     } catch (e) {
         console.log(e);

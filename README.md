@@ -13,7 +13,7 @@ Simply clone this project and:
 - npm i
 - Add your own .env file with the needed weatherbit,geonames, and 
  pixabay api credentials.
-- npm build prod-dev
+- npm run build-prod
 - do a test run with npm test, if passed proceed
 - npm start
 - open http://localhost:8080/
