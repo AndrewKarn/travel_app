@@ -58,15 +58,36 @@ section {
   justify-content: center;
 }
 
+@media screen and (min-width:100px) and (max-width:600px) {
+  .container {
+    width: 100%;
+  }
 
-@media only screen and (max-width: 700px) {
+  .flex-row {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+  }
+
   .left-side-container {
-    display: none;
+    display: flex;
+    flex-direction: row;
+    width: 65%;
+    padding: 0 10%;
+    height: 65%;
+    padding-bottom: 2%;
   }
   .right-side-container {
     display: flex;
-    width: 20%;
     flex-direction: row;
-    padding: 6em;
+    width: 60%;
+    padding: 0 10%;
+  }
+
+  .right-side-container {
+    padding: 0 10%;
+  }
+  .background-img {
+    display: flex;
   }
 }

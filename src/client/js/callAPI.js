@@ -7,7 +7,6 @@ async function postServer(data = {}, path ='/') {
         },
         body: JSON.stringify({'location': data})
     })
-    console.log(JSON.stringify({'location': data}));
     return result
 }
 

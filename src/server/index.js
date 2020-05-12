@@ -14,17 +14,17 @@ app.use(bodyParser.json());
 app.use(cors());
 const request = require('request');
 // Weather config
-const weatherURL = 'https://api.weatherbit.io/v2.0/current?'
-const weatherKey = '&key=9d698e472eef4712976778684810606e'
+const weatherURL = 'https://api.weatherbit.io/v2.0/forecast/daily?'
+const weatherKey = process.env.weatherKey
 
 // Pixabay stuffs
-const pixabayKey = '?key=16485261-477f6123e26514552107f546c';
-
-function constructPixabayURL(city, country) {
-    return `https://pixabay.com/api/${pixabayKey}&q=${city}+${country}&image_type=photo`
-}
+const pixabayKey = process.env.pixabayKey;
 
 app.post('/image', (req, res) => {
+    function constructPixabayURL(city, country) {
+        return `https://pixabay.com/api/${pixabayKey}&q=${city}+${country}&image_type=photo`
+    }
+
     let [country, city] = (req.body.location.split(",") ?? ['Paris, France'])
     request.get(constructPixabayURL(city, country), {json: true}, (err, response, body) => {
         try {
@@ -32,8 +32,7 @@ app.post('/image', (req, res) => {
                 res.send(JSON.stringify(body.hits[0].largeImageURL ?? {'result': 'no images found'}));
             }
         } catch (e) {
-            console.log(e)
-            res.send(JSON.stringify({'result': 'no images found'}))
+            res.send(JSON.stringify('https://cdn.pixabay.com/photo/2015/03/25/13/04/page-not-found-688965_960_720.png'))
         }
 
     })
@@ -41,17 +40,17 @@ app.post('/image', (req, res) => {
 
 
 app.post('/weather', (req, res) => {
-    let [lonData, latData] = req.body.location.split(",");
-    console.log(req.body.location)
+    let [lonData, latData, date1, date2] = req.body.location.split(",");
+    const start_date = `&start_date=${date1}`;
+    const end_date = `&end_date=${date2}`;
     const lon = `&lon=${lonData}` ?? '&lon=38.123';
-    const lat = `&lat=${latData}` ?? '&lat=78.543';
-    const urlString = `${weatherURL}${lat}${lon}${weatherKey}`;
-    console.log(urlString);
+    const lat = `lat=${latData}` ?? '&lat=78.543';
+    const urlString = `${weatherURL}${lat}${lon}${start_date}${end_date}&units=I${weatherKey}`
     request(urlString, {json: true}, (err, response, body) => {
-        if (!err) {
-            res.send(JSON.stringify(body.data[0].city_name));
-        } else {
-            return console.log(err);
+        try {
+            res.send(JSON.stringify(`Lows of ${body.data[0].min_temp} and highs of ${body.data[0].max_temp}`));
+        } catch (e) {
+            res.send(JSON.stringify('We had some trouble determining the average weather, please try again with a different date span!'))
         }
     });
 })
@@ -59,10 +58,14 @@ app.post('/weather', (req, res) => {
 
 app.post('/geodata', (req, res) => {
     let [city, country] = req.body.location.split(",") ?? [];
-    const geo = new geode('drew.karn', {language: 'en', country: country});
-    geo.search({name: city, placename: country}, function (err, results) {
-        res.send(JSON.stringify({'data':[results.geonames[0].lat, results.geonames[0].lng] ?? {'result': 'None found'}}));
-    });
+    const geo = new geode(process.env.geoName, {language: 'en', country: country});
+    try {
+        geo.search({name: city, placename: country}, function (err, results) {
+            res.send(JSON.stringify({'data': [results.geonames[0].lat, results.geonames[0].lng] ?? {'result': 'None found'}}));
+        });
+    } catch (e) {
+        console.log(e);
+    }
 })
 
 
