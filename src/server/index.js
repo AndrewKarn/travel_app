@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const geode = require('geode');
+const request = require('request');
 
 
 dotenv.config();
@@ -12,7 +13,6 @@ app.use(express.static('dist'))
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
-const request = require('request');
 // Weather config
 const weatherURL = 'https://api.weatherbit.io/v2.0/forecast/daily?'
 const weatherKey = process.env.weatherKey
@@ -26,12 +26,14 @@ app.post('/image', (req, res) => {
     }
 
     let [country, city] = (req.body.location.split(",") ?? ['Paris, France'])
+    console.log(constructPixabayURL(city, country));
     request.get(constructPixabayURL(city, country), {json: true}, (err, response, body) => {
         try {
             if (!err) {
                 res.send(JSON.stringify(body.hits[0].largeImageURL ?? {'result': 'no images found'}));
             }
         } catch (e) {
+            console.log(e)
             res.send(JSON.stringify('https://cdn.pixabay.com/photo/2015/03/25/13/04/page-not-found-688965_960_720.png'))
         }
 
